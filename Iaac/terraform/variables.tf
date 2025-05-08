@@ -10,10 +10,16 @@ variable "instance_type" {
   default     = "t3.micro"
 }
 
-variable "ssh-key_name" {
+variable "ssh_key_name" {
   description = "Nom exact de la clé SSH sur AWS EC2"
   type        = string
   default     = "terraform-key-vm"
+}
+
+variable "vpc_id" {
+  description = "ID du réseau"
+  type        = string
+  default     = "vpc-0123456789abcdef0"
 }
 
 variable "subnet_id" {

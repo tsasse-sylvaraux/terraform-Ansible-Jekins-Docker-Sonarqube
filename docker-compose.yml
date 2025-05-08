@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  # PETCLINIC Front-end APP SERVICE
+  petclinic:
+    build:
+      context: ./petclinic-APP-projet/
+      dockerfile: Dockerfile.multi
+    environment:
+      SERVER_PORT: 8080
+      MYSQL_URL: jdbc:mysql://mysqlserver/petclinic
+    ports:
+      - "8080:8080"
+    volumes:
+      - /app
+    depends_on:
+      - mysqlserver
+
+  # MYSQL SERVICE DB
+  mysqlserver:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+      MYSQL_USER: petclinic
+      MYSQL_PASSWORD: petclinic
+      MYSQL_DATABASE: petclinic
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - mysql_config:/etc/mysql/conf.d
+    ports:
+      - 3306:3306
+
+
+  # Service REDIS-0 NODES
+  redis-0:
+    image: redis:4.0.2
+    command: ["redis-server", "/etc/redis/redis.conf"]
+    volumes:
+      - ./redis/redis-0.conf:/etc/redis/redis.conf
+    ports:
+      - 6379:6379
+
+  # Service REDIS-1 replica
+  redis-1:
+    image: redis:4.0.2
+    command: ["redis-server", "/etc/redis/redis.conf"]
+    volumes:
+      - ./redis/redis-1.conf:/etc/redis/redis.conf
+    ports:
+      - 6380:6379
+
+  # Service REDIS-2 replica
+  redis-2:
+    image: redis:4.0.2
+    command: ["redis-server", "/etc/redis/redis.conf"]
+    volumes:
+      - ./redis/redis-2.conf:/etc/redis/redis.conf
+    ports:
+      - 6381:6379
+
+  # SENTINEL-01 NODES
+  sentinel-1:
+    image: redis:4.0.2
+    command: ["redis-sentinel", "/etc/redis/sentinel.conf"]
+    volumes:
+      - ./sentinel/sentinel-01.conf:/etc/redis/sentinel.conf
+    ports:
+      - 5000:5000
+
+  # SENTINEL-02 
+  sentinel-2:
+    image: redis:4.0.2
+    command: ["redis-sentinel", "/etc/redis/sentinel.conf"]
+    volumes:
+      - ./sentinel/sentinel-02.conf:/etc/redis/sentinel.conf
+    ports:
+      - 5001:5000
+
+  # SENTINEL-03 
+  sentinel-3:
+    image: redis:4.0.2
+    command: ["redis-sentinel", "/etc/redis/sentinel.conf"]
+    volumes:
+      - ./sentinel/sentinel-03.conf:/etc/redis/sentinel.conf
+    ports:
+      - 5002:5000
+
+volumes:
+  mysql_data:
+  mysql_config:

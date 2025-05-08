@@ -1,0 +1,23 @@
+- name: Install unzip, wget, Java
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - unzip
+    - wget
+    - openjdk-17-jdk
+
+- name: Download SonarQube
+  get_url:
+    url: https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.9.1.69595.zip
+    dest: /opt/sonarqube.zip
+
+- name: Extract SonarQube
+  unarchive:
+    src: /opt/sonarqube.zip
+    dest: /opt/
+    remote_src: yes
+
+- name: Start SonarQube (simple, non-production)
+  shell: |
+    nohup /opt/sonarqube-9.9.1.69595/bin/linux-x86-64/sonar.sh start &

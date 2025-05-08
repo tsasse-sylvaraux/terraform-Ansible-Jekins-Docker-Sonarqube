@@ -1,0 +1,14 @@
+- hosts: jenkins
+  become: yes
+  roles:
+    - jenkins
+
+- hosts: sonarqube
+  become: yes
+  roles:
+    - sonarqube
+
+- hosts: docker
+  become: yes
+  roles:
+    - docker

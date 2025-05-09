@@ -21,3 +21,9 @@ variable "instance_names" {
   type    = list(string)
   default = ["CI_CD_jenkins-server", "CI_CD_sonarqube-server", "CI_CD_docker-server"]
 }
+
+variable "ssh_public_key" {
+  description = "ma Clé publique SSH pour la connexion de Ansible a EC2"
+  type        = string
+  sensitive   = true
+}

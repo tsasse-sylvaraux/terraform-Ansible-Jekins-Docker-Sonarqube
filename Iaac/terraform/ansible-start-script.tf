@@ -3,7 +3,7 @@ resource "null_resource" "ansible_provision" {
 
   provisioner "local-exec" {
     command = <<EOT
-      echo ">> Attente 60s pour se connecter aux VMs démarrer..."
+      echo ">> Attente 30s pour se connecter aux VMs démarrer..."
       sleep 30
       
       echo ">> Génération de l'inventaire Ansible"

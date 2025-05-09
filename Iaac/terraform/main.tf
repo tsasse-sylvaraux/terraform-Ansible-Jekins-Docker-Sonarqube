@@ -92,6 +92,15 @@ resource "aws_security_group" "allow_ssh" {
 
 
 # -------------------------
+# ssh authentication key
+# -------------------------
+
+resource "aws_key_pair" "ansible" {
+  key_name   = var.ssh_key_name
+  public_key = var.ssh_public_key
+}
+
+# -------------------------
 # Instances EC2
 # -------------------------
 
@@ -99,7 +108,7 @@ resource "aws_instance" "ci_cd_vm" {
   count         = length(var.instance_names)
   ami           = var.ami_id
   instance_type = var.instance_type
-  key_name      = var.ssh_key_name
+  key_name      = aws_key_pair.ansible.key_name
   subnet_id     = aws_subnet.main.id
   vpc_security_group_ids = [aws_security_group.allow_ssh.id]
 
@@ -107,3 +116,4 @@ resource "aws_instance" "ci_cd_vm" {
     Name = var.instance_names[count.index]
   }
 }
+
